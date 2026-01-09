@@ -1,0 +1,33 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def subtreeWithAllDeepest(self, root: TreeNode) -> TreeNode:
+        
+        def dfs(node):
+            # Base case: if node is None, depth is 0 and subtree root is None
+            if not node:
+                return 0, None
+            
+            # Get max depth and candidate node from left and right children
+            left_depth, left_node = dfs(node.left)
+            right_depth, right_node = dfs(node.right)
+            
+            # Case 1: Left subtree is deeper
+            if left_depth > right_depth:
+                return left_depth + 1, left_node
+            
+            # Case 2: Right subtree is deeper
+            if right_depth > left_depth:
+                return right_depth + 1, right_node
+            
+            # Case 3: Depths are equal
+            # This node is the common ancestor for the deepest nodes in its subtrees
+            return left_depth + 1, node
+
+        # The second value returned by dfs is the desired subtree root
+        return dfs(root)[1]
